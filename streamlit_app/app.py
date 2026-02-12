@@ -1,10 +1,21 @@
 import streamlit as st
-import diyepw
 import os
-import tempfile
-import shutil
+from unittest.mock import patch
+
+# --- MONKEYPATCH START ---
+# This block intercepts the 'os.mkdir' command that causes the crash.
+# It temporarily disables directory creation during the 'diyepw' import.
+try:
+    with patch('os.mkdir'):
+        import diyepw
+except ImportError:
+    # Fallback if the patch fails for some reason
+    import diyepw
+# --- MONKEYPATCH END ---
+
 from pathlib import Path
 from datetime import datetime
+import tempfile
 
 st.set_page_config(page_title="AMY EPW Generator", page_icon="🌤️")
 
