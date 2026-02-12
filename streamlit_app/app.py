@@ -1,21 +1,23 @@
 import streamlit as st
+import logging
+from unittest.mock import MagicMock
+import sys
+
+
+class NullHandler(logging.Handler):
+    def emit(self, record):
+        pass
+
+logging.FileHandler = NullHandler
+
+import diyepw
+
 import os
-from unittest.mock import patch
-
-# --- MONKEYPATCH START ---
-# This block intercepts the 'os.mkdir' command that causes the crash.
-# It temporarily disables directory creation during the 'diyepw' import.
-try:
-    with patch('os.mkdir'):
-        import diyepw
-except ImportError:
-    # Fallback if the patch fails for some reason
-    import diyepw
-# --- MONKEYPATCH END ---
-
+import tempfile
+import shutil
 from pathlib import Path
 from datetime import datetime
-import tempfile
+
 
 st.set_page_config(page_title="AMY EPW Generator", page_icon="🌤️")
 
